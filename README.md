@@ -11,6 +11,8 @@ Don't rename it or the data will show up in git. Before you commit, run `git sta
 ## Files
 
 - `bank_data.py` - downloads and cleans banking sector data from Yahoo Finance
+- `bank_corr.py` - plots a daily-return correlation heatmap of the banking tickers
+- `bank_coint.py` - Engle-Granger cointegration test (ADF on the spread) for every pair of banks; correlation is reported, not used as a filter
 - `.gitignore` - ignores `data/` and `__pycache__/`
 
 If you're doing another sector, make your own script named after it (e.g. `energy_data.py`).
@@ -20,7 +22,7 @@ If you're doing another sector, make your own script named after it (e.g. `energ
 ```bash
 git clone https://github.com/Vish27010/bts-sprint-1.git
 cd bts-sprint-1
-pip install yfinance pandas numpy
+pip install yfinance pandas numpy statsmodels seaborn matplotlib
 ```
 
 ## The banking script
@@ -42,3 +44,12 @@ Default tickers: JPM, BAC, C, WFC, GS, MS, USB, PNC, TFC, FITB, KEY, RF, HBAN, M
 
 Cleaning: drops duplicates and empty rows, fills gaps of up to 3 days, fixes bad high/low values, and adds returns. Moves over 40% in a day get flagged in the report but kept.
 
+
+## The cointegration script
+
+```bash
+python3 bank_coint.py            # all pairs, full sample
+python3 bank_coint.py --plot 6   # also plot spreads of the 6 best pairs
+```
+
+Run `bank_data.py` first. It saves `coint_results.csv` and `coint_summary.txt` to `data/` (plus `coint_top_spreads.png` with `--plot`).
