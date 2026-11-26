@@ -13,6 +13,7 @@ Don't rename it or the data will show up in git. Before you commit, run `git sta
 - `bank_data.py` - downloads and cleans banking sector data from Yahoo Finance
 - `bank_corr.py` - plots a daily-return correlation heatmap of the banking tickers
 - `bank_coint.py` - Engle-Granger cointegration test (ADF on the spread) for every pair of banks; correlation is reported, not used as a filter
+- `bank_ou.py` - fits an Ornstein-Uhlenbeck model (OLS on AR(1)) to the spreads of the top 10 cointegrated pairs
 - `.gitignore` - ignores `data/` and `__pycache__/`
 
 If you're doing another sector, make your own script named after it (e.g. `energy_data.py`).
@@ -53,3 +54,12 @@ python3 bank_coint.py --plot 6   # also plot spreads of the 6 best pairs
 ```
 
 Run `bank_data.py` first. It saves `coint_results.csv` and `coint_summary.txt` to `data/` (plus `coint_top_spreads.png` with `--plot`).
+
+
+## The OU script
+
+```bash
+python3 bank_ou.py
+```
+
+Run `bank_coint.py` first. Takes the 10 pairs with the lowest Engle-Granger p-values and fits dS = theta(mu - S)dt + sigma dW to each spread by OLS (S_t on S_{t-1}, dt = 1/252, so theta is annualised). Prints theta, mu, sigma, half-life and the current z-score, and saves `ou_results.csv` and `ou_spreads.png` to `data/`.
